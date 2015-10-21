@@ -68,7 +68,7 @@ var util = {
 
 		} else if (Object.prototype.toString.call(opts, null) === '[object String]') { // 配置为html
 			div_wrap.innerHTML = opts;
-		} else if (Object.prototype.toString.call(opts, null) === '[object HTMLDivElement]') { // 传入的dom
+		} else if (opts && opts.nodeType) { // 传入的dom
 			opts.style.display = "inline-block";
 			div_wrap.appendChild(opts);
 		}
