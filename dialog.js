@@ -35,7 +35,7 @@ var util = {
 	 * 判断一个对象是否为数组
 	 */
 	isArray: function (obj) {
-		return (typeof Array.isArray) ? Array.isArray(obj) : (Object.prototype.toString.call(obj) === '[object Array]');
+		return (typeof Array.isArray === 'function') ? Array.isArray(obj) : (Object.prototype.toString.call(obj) === '[object Array]');
 	},
 
 	/**
