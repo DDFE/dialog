@@ -1,6 +1,6 @@
 {
   "name": "dialog",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dialog.js",
   "description": "公共弹窗组件",
   "files":[

@@ -10,9 +10,6 @@ var imageLoader = require('imageLoader');
 
 var images = [
 	__uri("i-loading.gif"),
-	__uri("i-plaint.png"),
-	__uri("i-tip.png"),
-	__uri("icon_close.png"),
 	__uri("loading_2.gif")
 ];
 
@@ -35,7 +32,7 @@ var util = {
 	 * 判断一个对象是否为数组
 	 */
 	isArray: function (obj) {
-		return (typeof Array.isArray === 'function') ? Array.isArray(obj) : (Object.prototype.toString.call(obj) === '[object Array]');
+		return (typeof Array.isArray) ? Array.isArray(obj) : (Object.prototype.toString.call(obj) === '[object Array]');
 	},
 
 	/**
@@ -68,7 +65,7 @@ var util = {
 
 		} else if (Object.prototype.toString.call(opts, null) === '[object String]') { // 配置为html
 			div_wrap.innerHTML = opts;
-		} else if (opts && opts.nodeType) { // 传入的dom
+		} else if (Object.prototype.toString.call(opts, null) === '[object HTMLDivElement]') { // 传入的dom
 			opts.style.display = "inline-block";
 			div_wrap.appendChild(opts);
 		}
@@ -80,15 +77,7 @@ var util = {
 	genIcon: function (icon) {
 		//默认无icon,true为默认icon
 		if (!icon) return "";
-
-		var w = icon.width || "8px",
-			h = icon.height || "36px",
-			url = icon.url || __uri("i-plaint.png"),
-			cssText = icon.cssText || "";
-
-		var html = '<img src=' + url + ' style="width:' + w + ';height:' + h + ';vertical-align:middle;' + cssText + '"/>';
-
-		return '<p class="d-icon">' + html + '</p>';
+		return '<p class="d-icon ' + icon + '"></p>';
 	},
 
 	/**
@@ -96,14 +85,18 @@ var util = {
 	 */
 	genTitle: function (title) {
 		title = title || {};
+		if(title.txt){
+			title.color = title.color || '';
+			title.size = title.size || '';
+			title.cssText = title.cssText || '';
 
-		title.color = title.color || '';
-		title.size = title.size || '';
-		title.cssText = title.cssText || '';
+			var cssText = 'color:' + title.color + ';font-size: ' + title.size + ';' + title.cssText;
 
-		var cssText = 'color:' + title.color + ';font-size: ' + title.size + ';' + title.cssText;
-
-		return title.txt ? '<p class="d-title" style="' + cssText + '">' + title.txt + '</p>' : "";
+			return '<p class="d-title" style="' + cssText + '">' + title.txt + '</p>';
+		}else{
+			return "";
+		}
+	
 	},
 
 	/**
@@ -113,23 +106,25 @@ var util = {
 		var tip = opts.tip || {},
 			title = opts.title || {};
 
-		if (title.txt) {
-			tip.color = tip.color || "#666";
-			tip.size = tip.size || '1.4rem';
-		} else {
-			tip.color = tip.color || "#333";
-			tip.size = tip.size || '1.6rem';
+		if(tip.txt){
+			if (title.txt) {
+				tip.color = tip.color || "#666";
+				tip.size = tip.size || '1.4rem';
+			} else {
+				tip.color = tip.color || "#333";
+				tip.size = tip.size || '1.6rem';
+			}
+
+			var cssText = 'color:' + tip.color + ';font-size:' + tip.size + ';';
+			return '<div class="d-tip" style="' + cssText + '">' + tip.txt + '</div>';
+		}else{
+			return "";
 		}
-
-		var cssText = 'color:' + tip.color + ';font-size:' + tip.size + ';';
-
-		return tip.txt ? '<div class="d-tip" style="' + cssText + '">' + tip.txt + '</div>' : "";
 	},
 	/**
 	 * 右上角关闭按钮
 	 */
 	genClose: function (close) {
-
 		return close ? '<a class="d-close" href="javascript:void(0);" style="' + (close.cssText || "") + '"></a>' : '';
 	},
 	/**
@@ -241,12 +236,13 @@ Dialog.fn = Dialog.prototype = {
 
 			window.addEventListener("resize", reset, false);
 			window.addEventListener("scroll", reset, false);
+			window.addEventListener('orientationchange',reset,false);
 		}
 
 		function reset(event) {
-			window.removeEventListener(event.type, reset, false); //先remove event
 			that.reset.call(that);
 		}
+
 	},
 	hide: function () {
 		if (dvWall && dvWrap) {
@@ -256,10 +252,11 @@ Dialog.fn = Dialog.prototype = {
 	},
 	reset: function () {
 		if (dvWall && dvWrap) {
+			var currWidth = $(window).width();
 			dvWrap.style.top = (docElem.clientHeight - dvWrap.clientHeight - 20) / 2 + "px";
 			dvWrap.style.left = (docElem.clientWidth - dvWrap.clientWidth) / 2 + "px";
 			var scrollH = document.body.scrollHeight || document.documentElement.scrollHeight; //考虑到页面滚动和窗体重置
-			dvWall.style.width = docElem.clientWidth + "px";
+			dvWall.style.width = currWidth + "px";
 			dvWall.style.height = scrollH + "px";
 		}
 	}
@@ -282,11 +279,7 @@ d.alert = function (cfg) {
 
 	dialog = Dialog({
 		type: "alert",
-		icon: opts.icon || {
-			url: __uri("i-plaint.png"),
-			width: "8px",
-			height: "36px"
-		},
+		icon: "icon-alert",
 		wallCss: "",
 		wrapCss: "background: #fff;width: 280px;text-align: center;",
 		title: {
@@ -302,8 +295,10 @@ d.alert = function (cfg) {
 			val: (opts.btn && opts.btn.val) || "我知道了",
 			handler: function (ev) {
 				dialog.hide();
-				if (typeof opts.btn.handler === 'function') {
-					opts.btn.handler(ev);
+				if(opts.btn){
+					if (typeof opts.btn.handler === 'function') {
+						opts.btn.handler(ev);
+				    }
 				}
 			}
 		}]
@@ -338,11 +333,7 @@ d.confirm = function (cfg) {
 		tip: {
 			txt: opts.tip ? opts.tip : opts.text
 		},
-		icon: opts.icon || {
-			url: __uri("i-plaint.png"),
-			width: "8px",
-			height: "36px"
-		},
+		icon: "icon-confirm",
 		wallCss: "",
 		wrapCss: "background: #fff;width: 280px;text-align: center;",
 		btns: [{
@@ -389,11 +380,7 @@ d.loading = function (cfg) {
 		type: "loading",
 		wallCss: "",
 		wrapCss: "background:#0c0d0d;opacity:0.7;width:140px;height:140px;",
-		icon: (cfg && cfg.icon) || {
-			width: "40px",
-			height: "40px",
-			url: __uri("loading_2.gif")
-		},
+		icon: "icon-loading",
 		tip: {
 			txt: opts.text || "正在加载",
 			color: "#fff",
@@ -428,14 +415,10 @@ d.flatLoading = function (cfg) {
 		opts = cfg;
 	}
 	dialog = Dialog({
-		type: "loading",
+		type: "floading",
 		wallCss: "background:#fff;opacity:1;",
 		wrapCss: "background:#fff;width:140px;height:140px;",
-		icon: (cfg && cfg.icon) || {
-			width: "43px",
-			height: "34px",
-			url: __uri("i-loading.gif")
-		},
+		icon: "icon-flat",
 		tip: {
 			txt: opts.text || "",
 			color: "#666",
@@ -490,13 +473,9 @@ d.tip = function (cfg) {
 
 	dialog = Dialog({
 		type: "tip",
+		icon: "icon-tip",
 		wallCss: "background:#fff;",
 		wrapCss: "background:#0c0d0d;width:140px;height:140px;opacity:0.7;",
-		icon: _cfg.icon || {
-			url: __uri("i-tip.png"),
-			width: "45px",
-			height: "45px"
-		},
 		tip: {
 			txt: _cfg.text || "温馨提醒",
 			color: "#fff",
