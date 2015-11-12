@@ -1,12 +1,12 @@
 {
   "name": "dialog",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dialog.js",
   "description": "公共弹窗组件",
   "files":[
     "dialog.styl",
     "i-loading.gif",
-    "i-plaint.png",
+    "i-alert.png",
     "i-tip.png",
     "icon_close.png",
     "loading_2.gif"
