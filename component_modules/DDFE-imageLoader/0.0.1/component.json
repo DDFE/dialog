@@ -1,0 +1,6 @@
+{
+  "name": "imageLoader",
+  "version": "0.0.1",
+  "main": "imageloader.js",
+  "description": "图片预加载函数"
+}
