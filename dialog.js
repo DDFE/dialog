@@ -310,7 +310,7 @@ d.alert = function (cfg) {
 /**
  * confirm dialog
  */
-d.confirm = function (cfg) {
+d.confirm = function (cfg , swapBtn) {
 	var opts = {};
 
 	if (typeof arguments[0] === 'string' && arguments[0]) {
@@ -325,6 +325,40 @@ d.confirm = function (cfg) {
 	var cancel = opts.cancel || {};
 	var confirm = opts.confirm || {};
 
+	var btn = [];
+	var cancelObj = {
+			id: cancel.id || "btn-cancel",
+			val: cancel.val || "取消",
+			kls: cancel.kls || "btn-white",
+			event: cancel.event || "click",
+			handler: function (e) {
+				dialog.hide();
+				if (typeof cancel.handler === 'function') {
+					cancel.handler(e);
+				}
+			}
+		};
+	var confirmObj = {
+			id: confirm.id || "btn-ok",
+			val: confirm.val || "确定",
+			kls: confirm.kls || "btn-orange",
+			event: confirm.event || "click",
+			handler: function (e) {
+				dialog.hide();
+				if (typeof confirm.handler === 'function') {
+					confirm.handler(e);
+				}
+			}
+		};
+
+	if(! swapBtn){
+		btn.push(cancelObj);
+		btn.push(confirmObj);
+	}else{
+		btn.push(confirmObj);
+		btn.push(cancelObj);
+	}
+
 	dialog = Dialog({
 		type: "confirm",
 		title: {
@@ -336,29 +370,7 @@ d.confirm = function (cfg) {
 		icon: "icon-confirm",
 		wallCss: "",
 		wrapCss: "background: #fff;width: 280px;text-align: center;",
-		btns: [{
-			id: cancel.id || "btn-cancel",
-			val: cancel.val || "取消",
-			kls: cancel.kls || "btn-white",
-			event: cancel.event || "click",
-			handler: function (e) {
-				dialog.hide();
-				if (typeof cancel.handler === 'function') {
-					cancel.handler(e);
-				}
-			}
-		}, {
-			id: confirm.id || "btn-ok",
-			val: confirm.val || "确定",
-			kls: confirm.kls || "btn-orange",
-			event: confirm.event || "click",
-			handler: function (e) {
-				dialog.hide();
-				if (typeof confirm.handler === 'function') {
-					confirm.handler(e);
-				}
-			}
-		}],
+		btns: btn,
 		ext: opts.ext
 	});
 	dialog.show();
