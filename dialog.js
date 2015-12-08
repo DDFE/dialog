@@ -351,7 +351,7 @@ d.confirm = function (cfg) {
 			}
 		};
 
-	if(! cfg.swapBtn){
+	if(! opts.swapBtn){
 		btn.push(cancelObj);
 		btn.push(confirmObj);
 	}else{
