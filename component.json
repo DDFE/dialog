@@ -10,8 +10,5 @@
     "i-tip.png",
     "icon_close.png",
     "loading_2.gif"
-  ],
-  "dependencies": {
-    "DDFE/imageLoader": "0.0.1"
-  }
+  ]
 }
