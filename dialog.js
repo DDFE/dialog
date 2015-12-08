@@ -6,16 +6,6 @@
 
 'use strict';
 
-var imageLoader = require('imageLoader');
-
-var images = [
-	__uri("i-loading.gif"),
-	__uri("loading_2.gif")
-];
-
-//图片预加载
-imageLoader(images);
-
 var d = {};
 
 var docElem = document.documentElement,
