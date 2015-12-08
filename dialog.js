@@ -310,7 +310,7 @@ d.alert = function (cfg) {
 /**
  * confirm dialog
  */
-d.confirm = function (cfg , swapBtn) {
+d.confirm = function (cfg) {
 	var opts = {};
 
 	if (typeof arguments[0] === 'string' && arguments[0]) {
@@ -351,7 +351,7 @@ d.confirm = function (cfg , swapBtn) {
 			}
 		};
 
-	if(! swapBtn){
+	if(! cfg.swapBtn){
 		btn.push(cancelObj);
 		btn.push(confirmObj);
 	}else{
