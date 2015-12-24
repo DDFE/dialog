@@ -6,6 +6,16 @@
 
 'use strict';
 
+var imageLoader = require('imageLoader');
+
+var images = [
+	__uri("i-loading.gif"),
+	__uri("loading_2.gif")
+];
+
+//图片预加载
+imageLoader(images);
+
 var d = {};
 
 var docElem = document.documentElement,
@@ -315,40 +325,6 @@ d.confirm = function (cfg) {
 	var cancel = opts.cancel || {};
 	var confirm = opts.confirm || {};
 
-	var btn = [];
-	var cancelObj = {
-			id: cancel.id || "btn-cancel",
-			val: cancel.val || "取消",
-			kls: cancel.kls || "btn-white",
-			event: cancel.event || "click",
-			handler: function (e) {
-				dialog.hide();
-				if (typeof cancel.handler === 'function') {
-					cancel.handler(e);
-				}
-			}
-		};
-	var confirmObj = {
-			id: confirm.id || "btn-ok",
-			val: confirm.val || "确定",
-			kls: confirm.kls || "btn-orange",
-			event: confirm.event || "click",
-			handler: function (e) {
-				dialog.hide();
-				if (typeof confirm.handler === 'function') {
-					confirm.handler(e);
-				}
-			}
-		};
-
-	if(! opts.swapBtn){
-		btn.push(cancelObj);
-		btn.push(confirmObj);
-	}else{
-		btn.push(confirmObj);
-		btn.push(cancelObj);
-	}
-
 	dialog = Dialog({
 		type: "confirm",
 		title: {
@@ -360,7 +336,29 @@ d.confirm = function (cfg) {
 		icon: "icon-confirm",
 		wallCss: "",
 		wrapCss: "background: #fff;width: 280px;text-align: center;",
-		btns: btn,
+		btns: [{
+			id: cancel.id || "btn-cancel",
+			val: cancel.val || "取消",
+			kls: cancel.kls || "btn-white",
+			event: cancel.event || "click",
+			handler: function (e) {
+				dialog.hide();
+				if (typeof cancel.handler === 'function') {
+					cancel.handler(e);
+				}
+			}
+		}, {
+			id: confirm.id || "btn-ok",
+			val: confirm.val || "确定",
+			kls: confirm.kls || "btn-orange",
+			event: confirm.event || "click",
+			handler: function (e) {
+				dialog.hide();
+				if (typeof confirm.handler === 'function') {
+					confirm.handler(e);
+				}
+			}
+		}],
 		ext: opts.ext
 	});
 	dialog.show();
@@ -475,10 +473,10 @@ d.tip = function (cfg) {
 
 	dialog = Dialog({
 		type: "tip",
-		icon: "icon-tip",
+		icon: cfg.icon || "icon-tip",
 		wallCss: "background:#fff;",
-		wrapCss: "background:#0c0d0d;width:140px;height:140px;opacity:0.7;",
-		tip: {
+		wrapCss: cfg.wrapCss || "background:#0c0d0d;width:140px;height:140px;opacity:0.7;",
+		tip: cfg.tip || {
 			txt: _cfg.text || "温馨提醒",
 			color: "#fff",
 			size: "14px"
@@ -491,6 +489,7 @@ d.tip = function (cfg) {
 		dialog.hide();
 	}, _cfg.time);
 };
+
 
 d.Fn = Dialog;
 
