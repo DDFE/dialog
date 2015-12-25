@@ -1,6 +1,6 @@
 {
   "name": "dialog",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "dialog.js",
   "description": "公共弹窗组件",
   "files":[
@@ -9,7 +9,8 @@
     "i-alert.png",
     "i-tip.png",
     "icon_close.png",
-    "loading_2.gif"
+    "loading_2.gif",
+    "send-text.png"
   ],
   "dependencies": {
     "DDFE/imageLoader": "0.0.1"
