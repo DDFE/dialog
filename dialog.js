@@ -252,7 +252,7 @@ Dialog.fn = Dialog.prototype = {
 	},
 	reset: function () {
 		if (dvWall && dvWrap) {
-			var currWidth = $(window).width();
+			var currWidth = document.documentElement.clientWidth;
 			dvWrap.style.top = (docElem.clientHeight - dvWrap.clientHeight - 20) / 2 + "px";
 			dvWrap.style.left = (docElem.clientWidth - dvWrap.clientWidth) / 2 + "px";
 			var scrollH = document.body.scrollHeight || document.documentElement.scrollHeight; //考虑到页面滚动和窗体重置
@@ -473,10 +473,10 @@ d.tip = function (cfg) {
 
 	dialog = Dialog({
 		type: "tip",
-		icon: cfg.icon || "icon-tip",
+		icon: _cfg.icon || "icon-tip",
 		wallCss: "background:#fff;",
-		wrapCss: cfg.wrapCss || "background:#0c0d0d;width:140px;height:140px;opacity:0.7;",
-		tip: cfg.tip || {
+		wrapCss: _cfg.wrapCss || "background:#0c0d0d;width:140px;height:140px;opacity:0.7;",
+		tip: _cfg.tip || {
 			txt: _cfg.text || "温馨提醒",
 			color: "#fff",
 			size: "14px"
