@@ -6,6 +6,16 @@
 
 'use strict';
 
+var imageLoader = require('imageLoader');
+
+var images = [
+	__uri("i-loading.gif"),
+	__uri("loading_2.gif")
+];
+
+//图片预加载
+imageLoader(images);
+
 var d = {};
 
 var docElem = document.documentElement,
@@ -242,7 +252,7 @@ Dialog.fn = Dialog.prototype = {
 	},
 	reset: function () {
 		if (dvWall && dvWrap) {
-			var currWidth = document.documentElement.clientWidth;
+			var currWidth = $(window).width();
 			dvWrap.style.top = (docElem.clientHeight - dvWrap.clientHeight - 20) / 2 + "px";
 			dvWrap.style.left = (docElem.clientWidth - dvWrap.clientWidth) / 2 + "px";
 			var scrollH = document.body.scrollHeight || document.documentElement.scrollHeight; //考虑到页面滚动和窗体重置
@@ -261,6 +271,7 @@ d.alert = function (cfg) {
 		opts.title = arguments[1] || "";
 		opts.tip = arguments[0];
 		opts.btn = {
+		    btnclass:'btn-orange',
 			val: arguments[2] || "我知道了"
 		};
 	} else if (cfg && typeof cfg === 'object') {
@@ -269,7 +280,7 @@ d.alert = function (cfg) {
 
 	dialog = Dialog({
 		type: "alert",
-		icon: "icon-alert",
+		icon: opts.icon || "icon-alert",
 		wallCss: "",
 		wrapCss: "background: #fff;width: 280px;text-align: center;",
 		title: {
@@ -280,7 +291,7 @@ d.alert = function (cfg) {
 		},
 		btns: [{
 			id: "btn-close",
-			kls: 'btn-orange',
+			kls: (opts.btn && opts.btn.btnclass) || 'btn-orange',
 			event: "click",
 			val: (opts.btn && opts.btn.val) || "我知道了",
 			handler: function (ev) {
@@ -463,10 +474,10 @@ d.tip = function (cfg) {
 
 	dialog = Dialog({
 		type: "tip",
-		icon: _cfg.icon || "icon-tip",
+		icon: cfg.icon || "icon-tip",
 		wallCss: "background:#fff;",
-		wrapCss: _cfg.wrapCss || "background:#0c0d0d;width:140px;height:140px;opacity:0.7;",
-		tip: _cfg.tip || {
+		wrapCss: cfg.wrapCss || "background:#0c0d0d;width:140px;height:140px;opacity:0.7;",
+		tip: cfg.tip || {
 			txt: _cfg.text || "温馨提醒",
 			color: "#fff",
 			size: "14px"
